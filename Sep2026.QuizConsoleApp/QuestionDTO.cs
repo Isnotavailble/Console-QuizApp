@@ -10,7 +10,7 @@ namespace QuizConsoleApp
         private string questionStatement;
         private string[] answers;
         private string correctAnswer;
-        public QuestionDTO(int id, string questionStatement, string[] answers,string correctAnswer)
+        public QuestionDTO(int id, string questionStatement, string[] answers, string correctAnswer)
         {
             this.id = id;
             this.questionStatement = questionStatement;
@@ -26,13 +26,13 @@ namespace QuizConsoleApp
         }
         public int Id
         {
-            get { return id; } 
+            get { return id; }
             set { id = value; }
         }
-        public string QuestionStatement {  get { return questionStatement; } set { questionStatement = value; } }
+        public string QuestionStatement { get { return questionStatement; } set { questionStatement = value; } }
         public string[] Answers { get { return answers; } set { answers = value; } }
         public string CorrectAnswer { get { return correctAnswer; } set { correctAnswer = value; } }
-       
+
 
 
     }

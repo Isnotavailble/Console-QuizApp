@@ -45,9 +45,9 @@ namespace QuizConsoleApp
             result.QuestionStatement = string.IsNullOrEmpty(questionDTO.QuestionStatement) ? result.QuestionStatement : questionDTO.QuestionStatement;
             result.CorrectAnswer = string.IsNullOrEmpty(questionDTO.CorrectAnswer) ? result.CorrectAnswer : questionDTO.CorrectAnswer;
             result.Answers = questionDTO.Answers.Length > 0 ? questionDTO.Answers : result.Answers;
-            
+
             Console.WriteLine("Question updated successfully");
-            
+
             return true;
 
         }
@@ -73,11 +73,11 @@ namespace QuizConsoleApp
             return result;
         }
 
-        public bool CheckAnswer(int questionId,int answerIndex)
+        public bool CheckAnswer(int questionId, int answerIndex)
         {
 
             QuestionDTO questionDTO = QuestionDTOList.Where(q => q.Id == questionId).FirstOrDefault()!;
-            
+
             if (questionDTO == null)
             {
                 Console.WriteLine("Invalid Quesiton");
@@ -91,7 +91,8 @@ namespace QuizConsoleApp
 
             return true;
         }
-        public void CalculateMark(int correctCount) {
+        public void CalculateMark(int correctCount)
+        {
             double totalQuestions = Convert.ToDouble(QuestionDTOList.Count);
             double correctRate = (correctCount / totalQuestions) * 100;
             Console.WriteLine($"Correct {correctRate}% ( {correctCount} out of  {totalQuestions} questions )");

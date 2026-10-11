@@ -43,7 +43,7 @@ while (run)
                     Console.Write("Enter correct answer >>> ");
                     string inputCorrectAnswer = Console.ReadLine()!;
 
-                    
+
                     QuestionDTO questionDTO = new QuestionDTO(inputQuestionStatement.Trim(), answers, inputCorrectAnswer.Trim());
                     questionService.CreateQuestion(questionDTO);
                     break;
