@@ -8,8 +8,6 @@ namespace QuizConsoleApp
     public class QuestionService
     {
         public List<QuestionDTO> QuestionDTOList = new List<QuestionDTO>();
-        
-
       
         public int GenerateId()
         {
@@ -89,7 +87,13 @@ namespace QuizConsoleApp
 
         public bool DeleteQuestion(int id)
         {
-            QuestionDTOList.RemoveAt(id);
+            QuestionDTO targetQuestion = QuestionDTOList.Where(q => q.Id == id).FirstOrDefault()!;
+            if (targetQuestion == null) {
+                Console.WriteLine($"Question {id} not found");
+                return false;
+            }
+            QuestionDTOList.Remove(targetQuestion);
+
             Console.WriteLine($" Question with ID {id} has been deleted successfully");
             return true;
         }
@@ -109,6 +113,23 @@ namespace QuizConsoleApp
                 result[j] = temp;
             }
             return result;
+        }
+
+        public void ViewAllQuestions()
+        {
+            if (QuestionDTOList.Count == 0) {
+                Console.WriteLine("There is no question in the list.Please create some questions");
+                return;
+            }
+
+            foreach (QuestionDTO questionDTO in QuestionDTOList) {
+                Console.WriteLine($"\nQuestion : {questionDTO.QuestionStatement}");
+                for (int i = 0; i < questionDTO.Answers.Length; i++) {
+                    Console.WriteLine($"{i + 1}. {questionDTO.Answers[i]}");
+                }
+            
+            }
+                
         }
 
         public bool CheckAnswer(int questionId, int answerIndex)

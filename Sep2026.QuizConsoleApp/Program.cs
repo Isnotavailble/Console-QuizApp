@@ -22,9 +22,10 @@ while (run)
     {
         case 1:
             Console.WriteLine("\nQuestion Management Menu");
-            Console.WriteLine("1. Create");
-            Console.WriteLine("2. Update");
-            Console.WriteLine("3. Delete");
+            Console.WriteLine("1. View all questions");
+            Console.WriteLine("2. Create a question");
+            Console.WriteLine("3. Update a question");
+            Console.WriteLine("4. Delete a question");
             Console.Write("Choose an Option >>> ");
 
             string inputNextOption = Console.ReadLine()!;
@@ -32,7 +33,11 @@ while (run)
 
             switch (opt)
             {
-                case 1:
+                case 1: 
+                    questionService.ViewAllQuestions();
+                    break;
+
+                case 2:
                     Console.Write("Enter Question Statement >>> ");
                     string inputQuestionStatement = Console.ReadLine()!;
 
@@ -48,7 +53,7 @@ while (run)
                     questionService.CreateQuestion(questionDTO);
                     break;
 
-                case 2:
+                case 3:
                     Console.WriteLine("Hit Enter or Leave empty if you don't want to update a field");
                     Console.Write("Enter Question ID to update >>> ");
                     int updateId = Convert.ToInt32(Console.ReadLine());
@@ -68,7 +73,7 @@ while (run)
                     questionService.UpdateQuestion(updateDTO);
                     break;
 
-                case 3:
+                case 4:
                     Console.Write("Enter Question ID to delete >>> ");
                     int deleteId = Convert.ToInt32(Console.ReadLine());
                     questionService.DeleteQuestion(deleteId);
