@@ -49,6 +49,7 @@ while (run)
                     break;
 
                 case 2:
+                    Console.WriteLine("Hit Enter or Leave empty if you don't want to update a field");
                     Console.Write("Enter Question ID to update >>> ");
                     int updateId = Convert.ToInt32(Console.ReadLine());
 
@@ -58,7 +59,7 @@ while (run)
                     Console.Write("Enter new Answers (comma separated) >>> ");
                     string updateAnswersInput = Console.ReadLine()!;
                     string[] updateAnswers = updateAnswersInput.Split(',');
-
+                  
                     Console.Write("Enter new correct answer >>> ");
                     string updateCorrect = Console.ReadLine()!;
 
