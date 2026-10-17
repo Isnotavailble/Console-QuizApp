@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using QuizConsoleApp;
 
 QuestionService questionService = new QuestionService();
-bool run = true;
 Start:
 
 Console.WriteLine("\nQuiz App");
