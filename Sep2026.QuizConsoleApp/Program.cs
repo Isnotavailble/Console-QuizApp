@@ -3,18 +3,17 @@ using System.Collections.Generic;
 using QuizConsoleApp;
 
 QuestionService questionService = new QuestionService();
-Start:
 
+Start:
 Console.WriteLine("\nQuiz App");
 Console.WriteLine("-------------");
 Console.WriteLine("Menu : ");
 Console.WriteLine("1. Manage questions");
 Console.WriteLine("2. Answer questions");
 Console.WriteLine("3. Exit");
-Console.Write("Choose an option >>> ");
 
-string inputOption = Console.ReadLine()!;
-int option = Convert.ToInt32(inputOption);
+// Using ReadNumber so it doesn't crash on letters or invalid inputs
+int option = ReadNumber("Choose an option >>> ");
 
 switch (option)
 {
@@ -25,10 +24,8 @@ switch (option)
         Console.WriteLine("3. Update a question");
         Console.WriteLine("4. Delete a question");
         Console.WriteLine("5. Back to Menu");
-        Console.Write("Choose an Option >>> ");
 
-        string inputNextOption = Console.ReadLine()!;
-        int opt = Convert.ToInt32(inputNextOption);
+        int opt = ReadNumber("Choose an Option >>> ");
 
         switch (opt)
         {
@@ -37,63 +34,55 @@ switch (option)
                 break;
 
             case 2:
-                Console.Write("Enter Question Statement >>> ");
-                string inputQuestionStatement = Console.ReadLine()!;
-
-                Console.Write("Enter Question's answers (comma separated) >>> ");
-                string inputAnswers = Console.ReadLine()!;
+                string inputQuestionStatement = ReadText("Enter Question Statement >>> ");
+                string inputAnswers = ReadText("Enter Question's answers (comma separated) >>> ");
                 string[] answers = inputAnswers.Split(',');
+                string inputCorrectAnswer = ReadText("Enter correct answer >>> ");
 
-                Console.Write("Enter correct answer >>> ");
-                string inputCorrectAnswer = Console.ReadLine()!;
-
-
-                QuestionDTO questionDTO = new QuestionDTO(inputQuestionStatement.Trim(), answers, inputCorrectAnswer.Trim());
+                QuestionDTO questionDTO = new QuestionDTO
+                {
+                    QuestionStatement = inputQuestionStatement.Trim(),
+                    Answers = answers,
+                    CorrectAnswer = inputCorrectAnswer.Trim()
+                };
                 questionService.CreateQuestion(questionDTO);
                 break;
 
             case 3:
-
                 if (questionService.QuestionDTOList.Count == 0)
                 {
-                    Console.WriteLine("\nThere is no questions in the list. Please try to create question first!");
+                    Console.WriteLine("\nThere are no questions in the list. Please try to create a question first!");
                     break;
                 }
-                    
-                Console.Write("Enter Question ID to update >>> ");
-                int updateId = Convert.ToInt32(Console.ReadLine());
 
-                Console.Write("Enter new Question Statement or press Enter to skip >>> ");
-                string updateStatement = Console.ReadLine()!;
-
-                Console.Write("Enter new Answers (comma separated) or press Enter to skip >>> ");
-                string updateAnswersInput = Console.ReadLine()!;
+                int updateId = ReadNumber("Enter Question ID to update >>> ");
+                string updateStatement = ReadText("Enter new Question Statement >>> ");
+                string updateAnswersInput = ReadText("Enter new Answers (comma separated) >>> ");
                 string[] updateAnswers = updateAnswersInput.Split(',');
-                
+                string updateCorrect = ReadText("Enter new correct answer >>> ");
 
-                Console.Write("Enter new correct answer or press Enter to skip >>> ");
-                string updateCorrect = Console.ReadLine()!;
-
-                // Using the constructor WITH ID for updates
-                QuestionDTO updateDTO = new QuestionDTO(updateId, updateStatement, updateAnswers, updateCorrect);
+                QuestionDTO updateDTO = new QuestionDTO
+                {
+                    Id = updateId,
+                    QuestionStatement = updateStatement,
+                    Answers = updateAnswers,
+                    CorrectAnswer = updateCorrect
+                };
                 questionService.UpdateQuestion(updateDTO);
                 break;
 
             case 4:
                 if (questionService.QuestionDTOList.Count == 0)
                 {
-                    Console.WriteLine("\nThere is no questions in the list. Please try to create question first!");
+                    Console.WriteLine("\nThere are no questions in the list. Please try to create a question first!");
                     break;
                 }
-                Console.Write("Enter Question ID to delete >>> ");
-                int deleteId = Convert.ToInt32(Console.ReadLine());
+                int deleteId = ReadNumber("Enter Question ID to delete >>> ");
                 questionService.DeleteQuestion(deleteId);
                 break;
 
             case 5:
-                //back to main menu same as break
                 goto Start;
-               
         }
         break;
 
@@ -102,36 +91,37 @@ switch (option)
 
         if (questionService.QuestionDTOList.Count == 0)
         {
-            Console.WriteLine("There is no questions in the list. Please try to create question first!");
+            Console.WriteLine("There are no questions in the list. Please try to create a question first!");
             break;
         }
 
         List<QuestionDTO> shuffledList = questionService.Shuffle();
         int score = 0;
         int questionNumber = 1;
+
         foreach (QuestionDTO q in shuffledList)
         {
-
             Console.WriteLine($"\nNo.{questionNumber} Question: {q.QuestionStatement}");
             questionNumber++;
 
             for (int i = 0; i < q.Answers.Length; i++)
             {
                 int optNum = i + 1;
-                Console.WriteLine($"{optNum}. {q.Answers[i]}");
+                Console.WriteLine($"{optNum}. {q.Answers[i].Trim()}");
             }
 
-            Console.Write("Choose answer number >>> ");
+            int ansIndex = ReadNumber("Choose answer number >>> ");
 
-            string inputAnsIndex = Console.ReadLine()!;
-
-            int ansIndex = Convert.ToInt32(inputAnsIndex);
-
-            bool isCorrect = questionService.CheckAnswer(q.Id, ansIndex - 1);
+            // Fixed the typo here (was ansIndex1\n)
+            bool isCorrect = questionService.CheckAnswer(q.Id, ansIndex);
             if (isCorrect)
             {
                 Console.WriteLine("Correct!");
                 score++;
+            }
+            else
+            {
+                Console.WriteLine("Incorrect!");
             }
         }
 
@@ -147,4 +137,41 @@ switch (option)
 }
 goto Start;
 End:
-Console.WriteLine("Existing program .....");
+//questionService.SaveToJsonFile();
+Console.WriteLine("Exiting program .....");
+
+
+// helper function
+
+static string ReadText(string message)
+{
+    while (true)
+    {
+        Console.Write(message);
+        string? input = Console.ReadLine();
+        if (input == null)
+        {
+            throw new EndOfStreamException();
+        }
+        if (!string.IsNullOrWhiteSpace(input))
+        {
+            return input.Trim();
+        }
+        Console.WriteLine("Please enter a value.");
+    }
+}
+
+static int ReadNumber(string message)
+{
+    while (true)
+    {
+        string input = ReadText(message);
+        //out keyword create the var directly on success.
+        bool isNumber = int.TryParse(input, out int number);
+        if (isNumber)
+        {
+            return number;
+        }
+        Console.WriteLine("Please enter a whole number.");
+    }
+}

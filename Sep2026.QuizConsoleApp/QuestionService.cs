@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.Json;
 
 namespace QuizConsoleApp
 {
@@ -9,10 +10,46 @@ namespace QuizConsoleApp
     {
         public List<QuestionDTO> QuestionDTOList = new List<QuestionDTO>();
 
+        //public QuestionService()
+        //{
+        //    //read from file
+        //    LoadFromJsonFile();
+        //}
+        ////Save the List<QuestionDTO> to json file
+        //public void SaveToJsonFile(string fileName = "dumb.json")
+        //{
+
+        //    if (QuestionDTOList.Count == 0)
+        //    {
+        //        Console.WriteLine("Nothing to save !");
+        //        return;
+
+        //    }
+
+        //    JsonSerializerOptions options = new JsonSerializerOptions() { WriteIndented = true };
+        //    string jsonContent = JsonSerializer.Serialize(QuestionDTOList, options);
+        //    File.WriteAllText(fileName, jsonContent);
+        //}
+
+        ////Get the List<QuestionDTO> from json file
+        //public void LoadFromJsonFile(string fileName = "dumb.json")
+        //{
+        //    string? fileContents = File.Exists(fileName) ? File.ReadAllText(fileName) : null;
+        //    if (fileContents != null)
+        //    {
+
+        //        List<QuestionDTO>? jsonList = JsonSerializer.Deserialize<List<QuestionDTO>>(fileContents);
+
+        //        QuestionDTOList = jsonList == null ? new List<QuestionDTO>() : jsonList;
+
+        //    }
+        //}
+
         public int GenerateId()
         {
             if (QuestionDTOList.Count == 0)
                 return 1;
+            
             //get the largest id from list + 1
             int id = QuestionDTOList.Max(q => q.Id) + 1;
 
@@ -73,7 +110,7 @@ namespace QuizConsoleApp
 
             result.QuestionStatement = string.IsNullOrEmpty(questionDTO.QuestionStatement) ? result.QuestionStatement : questionDTO.QuestionStatement.Trim();
             result.CorrectAnswer = string.IsNullOrEmpty(questionDTO.CorrectAnswer) ? result.CorrectAnswer : questionDTO.CorrectAnswer.Trim();
-            
+
             //result.Answers = questionDTO.Answers.Length > 0 ? questionDTO.Answers : result.Answers;
             //trim the comma separated values and remove the empty string values
             if (questionDTO.Answers.Length > 0)
@@ -87,7 +124,8 @@ namespace QuizConsoleApp
 
                     cleanAnswers.Add(ans.Trim());
                 }
-                if (!cleanAnswers.Contains(result.CorrectAnswer)) {
+                if (!cleanAnswers.Contains(result.CorrectAnswer))
+                {
                     Console.WriteLine("Correct answer is not found");
                     return;
                 }
@@ -172,8 +210,8 @@ namespace QuizConsoleApp
         public void CalculateMark(int correctCount)
         {
             double totalQuestions = Convert.ToDouble(QuestionDTOList.Count);
-            double correctRate = Math.Round(((correctCount / totalQuestions) * 100),2);
-            
+            double correctRate = Math.Round(((correctCount / totalQuestions) * 100), 2);
+
             Console.WriteLine($"Correct {correctRate}% ( {correctCount} out of  {totalQuestions} questions )");
 
         }
