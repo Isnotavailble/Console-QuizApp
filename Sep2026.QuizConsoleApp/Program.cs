@@ -113,7 +113,7 @@ switch (option)
             int ansIndex = ReadNumber("Choose answer number >>> ");
 
             // Fixed the typo here (was ansIndex1\n)
-            bool isCorrect = questionService.CheckAnswer(q.Id, ansIndex);
+            bool isCorrect = questionService.CheckAnswer(q.Id, ansIndex - 1);
             if (isCorrect)
             {
                 Console.WriteLine("Correct!");
